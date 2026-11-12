@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Ludo - By Sahil</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        h1 { color: #facc15; font-size: 3rem; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px; }
+        .btn-container { display: flex; flex-direction: column; gap: 20px; max-width: 300px; margin: 0 auto; }
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-duo { background: #10b981; }
+        .btn-triple { background: #8b5cf6; }
+        .btn-squad { background: #f59e0b; }
+    </style>
+</head>
+<body>
+
+    <h1>Classic LUDO</h1>
+    <p>Created by MD Sahil Sheikh</p>
+
+    <div class="btn-container">
+        <button class="btn btn-duo" onclick="startMatch(2)">DUO (2 Players)</button>
+        <button class="btn btn-triple" onclick="startMatch(3)">TRIPLE (3 Players)</button>
+        <button class="btn btn-squad" onclick="startMatch(4)">SQUAD (4 Players)</button>
+    </div>
+
+    <script>
+        const socket = io();
+
+        function startMatch(playersCount) {
+            socket.emit('create_match', { players: playersCount });
+        }
+
+        socket.on('match_created', (data) => {
+            // Match create hone par game page par bhej denge aur code sath le jayenge
+            window.location.href = `/game?code=${data.match_code}&players=${data.players}`;
+        });
+    </script>
+</body>
+</html>
