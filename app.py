@@ -74,5 +74,6 @@ def handle_roll_dice(data):
     emit('dice_result', {'color': color, 'dice': dice_value}, room=match_code)
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000)
+    socketio.run(app, allow_unsafe_werkzeug=True)
+    
               
