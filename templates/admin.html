@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Ludo - Admin God Mode</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            background: #1e1b4b;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h2 { color: #facc15; }
+        .control-panel {
+            background: #312e81;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 20px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: none;
+            box-sizing: border-box;
+        }
+        input, select { background: #1e293b; color: white; text-align: center; }
+        .btn-set { background: #ef4444; color: white; font-weight: bold; cursor: pointer; }
+        .btn-set:active { transform: scale(0.98); }
+        #statusMsg { color: #4ade80; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>👑 Ludo Admin God Mode</h2>
+    <p>Control any player's next dice roll secretly!</p>
+
+    <div class="control-panel">
+        <label>Enter Match Code:</label>
+        <input type="text" id="adminMatchCode" placeholder="e.g. LUDO1234">
+
+        <label>Select Player Color:</label>
+        <select id="playerColor">
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+        </select>
+
+        <label>Force Next Dice Number:</label>
+        <select id="diceNumber">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" selected>6 (Jackpot!)</option>
+        </select>
+
+        <button class="btn-set" onclick="sendAdminCommand()">SET RIGGED DICE 🎯</button>
+        <p id="statusMsg"></p>
+    </div>
+
+    <script>
+        const socket = io();
+
+        function sendAdminCommand() {
+            const matchCode = document.getElementById('adminMatchCode').value.trim();
+            const color = document.getElementById('playerColor').value;
+            const number = document.getElementById('diceNumber').value;
+
+            if (!matchCode) {
+                alert("Pehle Match Code daal bhai!");
+                return;
+            }
+
+            socket.emit('admin_set_dice', {
+                match_code: matchCode,
+                color: color,
+                number: number
+            });
+        }
+
+        socket.on('admin_ack', (data) => {
+            document.getElementById('statusMsg').innerText = data.message;
+        });
+    </script>
+</body>
+</html>
